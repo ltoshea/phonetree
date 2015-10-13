@@ -1,5 +1,6 @@
 #Task1.py
 # (question,response if yes, response if no)
+import sys
 questions = {
 	1: ('Is your phone turning on?',4,2),
 	2: ('Does your phone charge when plugged into the wall?',4,3),
@@ -16,16 +17,37 @@ def fetchanswer(qno,index):
 		return questions[questions[qno][index]][0]
 	else:
 		#print 'here2'
-		return questions[qno][index]
+		print questions[qno][index]
+		sys.exit()
+
+
+def printq(i):
+	print questions[i][0]
+	ans = raw_input()
+	if ans = 'yes':
+		fetchanswer(i,1)
+	elif ans = 'no':
+		fetchanswer(i,1)
+	else:
+		print 'error'
+		sys.exit
+
+	
 
 
 
-print questions[1][0]
-a = raw_input()
-if a=='yes':
-	print fetchanswer(1,1)
-else:
-	print fetchanswer(1,2)
+printq(1)
+
+
+
+
+# a = raw_input()
+# if a=='yes':
+# 	print fetchanswer(1,1)
+# 	b = 
+# # 	print fetchanswer(1,1)
+# else:
+# 	print fetchanswer(1,2)
 
 # x = 1
 # while isinstance(x,int):
