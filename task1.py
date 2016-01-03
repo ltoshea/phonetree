@@ -2,6 +2,7 @@
 # (question,response if yes, response if no)
 import sys
 import os
+import traceback
 from random import randint
 # answers = {
 # 	1: ('Replace the Battery')
@@ -84,36 +85,43 @@ def dev_identify():
 
 def write_casenumber():
 	"""Writes new case number to a file"""
-	f = open('casenumbers.txt','r')
-	if is_emptyfile() = 1:
+	if is_emptyfile() == 1:
+		f = open('casenumbers.txt','a')
 		newnum = gen_casenumber()
-		f.write(newnum)
+		print ('Your case number is {} and has been recorded so your repair can be tracked'.format(newnum))
+		f.write(str(newnum)+'\n')
 	else:
+		f = open('casenumbers.txt','r')
 		linelist = f.readlines()
+		f.close()
 		try:
+			f = open('casenumbers.txt','a')
 			newnum = int(linelist[-1])+1
-			f.write((newnum+1)+'\n')
-
-		except StandardError:
+			f.write(str(newnum)+'\n')
+			f.close()
+			print ('Your case number is {} and has been recorded so your repair can be tracked'.format(newnum))
+		except Exception as e:
 			print ('There was a problem generating a new case number - now exiting')
 			sys.exit()
-	f.close()
 
 
 def is_emptyfile():
-	"""Checks to see if file is empty"""
+	"""Checks to see if file exist and if it is empty """
 	try:
 		if os.stat('casenumbers.txt').st_size > 0:
 			return 0
 		else:
 			return 1
 	except OSError:
-		print "No file found!"
+		print ("File does not exist!")
+		print("Creating file...")
+		f = open('casenumbers.txt','w').close()
+		return 1
 
 
 def gen_casenumber():
 	"""Generates a random number for the first case number"""
-	return randint(0,10000)
+	return str(randint(0,10000))
 
 
 def openfile(problem):
@@ -131,6 +139,6 @@ if __name__ == "__main__":
 	elif q=='2':
 		scan_input()
 	elif q=='3':
-		print ("Question 3")
+		write_casenumber()
 	else:
 		print ('Error in input')
