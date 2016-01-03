@@ -1,7 +1,8 @@
 #Task1.py
 # (question,response if yes, response if no)
 import sys
-
+import os
+from random import randint
 # answers = {
 # 	1: ('Replace the Battery')
 # 	2: ('Reset your phone to factory settings')
@@ -17,7 +18,7 @@ questions = {
 	3: ('Are you using the official charger that came with your phone?',6,105),
 	4: ('Is your battery removable?',101,106),
 	5: ('Are you having display problems?',6,7),
-	6: ('Does the screen appear to be cracked or have black splotches beneath the screen?',102,16),
+	6: ('Does the screen appear to be cracked or have black splotches beneath the screen?',106,106),
 	7: ('Are you having a problem with a specific app on your phone?',102,8),
 	8: ('Are you having trouble with getting network signal?',9,10),
 	9: ('Have you replaced your simcard?',104,103),
@@ -61,4 +62,66 @@ def printq(i):
 			print ('Invalid input. Please answer "yes" or "no"')
 			break
 
-printq(1)
+def scan_input():
+	print ("Please enter your problem")
+	question = input().lower()
+	if ('screen' in question) or ('display' in question):
+		print('screen probs')
+		openfile('display.txt')
+	elif ('power' in question) or ('turn on' in question) or ('charge' in question) or ('battery' in question):
+		openfile('power.txt')
+	elif ('sound' in question) or ('music' in question) or ('speaker' in question):
+		print('sound.txt')
+	elif ('signal' in question) or ('reception' in question):
+		print('signal.txt')
+	else:
+		print('Sorry, no help articles were found for your problem')
+
+def dev_identify():
+	print ("What device do you need troubleshooting help with?\n Available devices are phones,tablets,laptops,")
+
+
+def write_casenumber():
+	if is_emptyfile()
+	
+	f = open('casenumbers.txt','r')
+	linelist = f.readlines()
+	f.close()
+	try:
+		newnum = int(linelist[-1])+1
+	except StandardError:
+		print ('There was a problem generating a new case number - now exiting')
+		sys.exit()
+
+
+def is_emptyfile():
+	try:
+		if os.stat('casenumbers.txt').st_size > 0:
+			return 0
+		else:
+			return 1
+	except OSError:
+		print "No file found!"
+
+
+def gen_casenumber():
+	return randint(0,10000)
+
+
+def openfile(problem):
+	f = open(problem,'r')
+	contents = f.read()
+	print (contents)
+	f.close()	
+
+if __name__ == "__main__":
+	print ("Please enter a number for the task you wish to run. Valid numbers are 1,2,3")
+	q = input()
+	if q=='1':
+		printq(1)
+	elif q=='2':
+		scan_input()
+	elif q=='3':
+		print ("Question 3")
+	else:
+		print ('Error in input')
