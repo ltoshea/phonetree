@@ -11,7 +11,6 @@ from random import randint
 # 	5: ('Please replace your charging cable with an official one a retry the guide')
 
 # }
-
 questions = {
 	1: ('Is your phone turning on?',5,2),
 	2: ('Does your phone charge when plugged into the wall?',4,3),
@@ -63,6 +62,7 @@ def printq(i):
 			break
 
 def scan_input():
+	"""Prints solutions to common device problems"""
 	print ("Please enter your problem")
 	question = input().lower()
 	if ('screen' in question) or ('display' in question):
@@ -78,23 +78,30 @@ def scan_input():
 		print('Sorry, no help articles were found for your problem')
 
 def dev_identify():
+	"""Identifies device that needs troubleshooting"""
 	print ("What device do you need troubleshooting help with?\n Available devices are phones,tablets,laptops,")
 
 
 def write_casenumber():
-	if is_emptyfile()
-	
+	"""Writes new case number to a file"""
 	f = open('casenumbers.txt','r')
-	linelist = f.readlines()
+	if is_emptyfile() = 1:
+		newnum = gen_casenumber()
+		f.write(newnum)
+	else:
+		linelist = f.readlines()
+		try:
+			newnum = int(linelist[-1])+1
+			f.write((newnum+1)+'\n')
+
+		except StandardError:
+			print ('There was a problem generating a new case number - now exiting')
+			sys.exit()
 	f.close()
-	try:
-		newnum = int(linelist[-1])+1
-	except StandardError:
-		print ('There was a problem generating a new case number - now exiting')
-		sys.exit()
 
 
 def is_emptyfile():
+	"""Checks to see if file is empty"""
 	try:
 		if os.stat('casenumbers.txt').st_size > 0:
 			return 0
@@ -105,10 +112,12 @@ def is_emptyfile():
 
 
 def gen_casenumber():
+	"""Generates a random number for the first case number"""
 	return randint(0,10000)
 
 
 def openfile(problem):
+	"""Opens file and prints contents"""
 	f = open(problem,'r')
 	contents = f.read()
 	print (contents)
