@@ -1,17 +1,9 @@
-#Task1.py
-# (question,response if yes, response if no)
+
 import sys
 import os
 import traceback
 from random import randint
-# answers = {
-# 	1: ('Replace the Battery')
-# 	2: ('Reset your phone to factory settings')
-# 	3: ('Replce your SIM Card')
-# 	4: ('Contact your network operator')
-# 	5: ('Please replace your charging cable with an official one a retry the guide')
 
-# }
 questions = {
 	1: ('Is your phone turning on?',5,2),
 	2: ('Does your phone charge when plugged into the wall?',4,3),
@@ -34,8 +26,6 @@ questions = {
 	1000: ('Troubleshooting complete','END','END')
 }
 
-
-
 def nextq(qno,index):
 	if isinstance(questions[qno][index],int):
 		#if questions[questions[qno][index]][1] == 1000:
@@ -44,7 +34,6 @@ def nextq(qno,index):
 	else:
 		print ('An Error has occured')
 		sys.exit()	
-
 
 def printq(i):
 	newq = i
@@ -78,51 +67,77 @@ def scan_input():
 	else:
 		print('Sorry, no help articles were found for your problem')
 
-def dev_identify():
-	"""Identifies device that needs troubleshooting"""
-	print ("What device do you need troubleshooting help with?\n Available devices are phones,tablets,laptops,")
+def q3():
+	"""Identifies device that needs troubleshooting and loads relevant questions"""
+	
+	print ('What device do you need troubleshooting help with?\n Available selections are mobile phone, tablet or laptop')
+	device = input().lower()
+	print ('What is the Manufacturer of your device? (For example Samsung, Apple)')
+	manufacturer = input().lower()
+	print("What is the serial number on your device? (this can normally be found on the back of your device. Enter 0 if you don't know)")
+	serialnum = input().lower()
+	print("Have you bought the product within the last 12 months?")
+	warranty = input().lower()
 
-
-def write_casenumber():
-	"""Writes new case number to a file"""
-	if is_emptyfile() == 1:
-		f = open('casenumbers.txt','a')
-		newnum = gen_casenumber()
-		print ('Your case number is {} and has been recorded so your repair can be tracked'.format(newnum))
-		f.write(str(newnum)+'\n')
+	if ('phone' in device) or ('mobile' in device) or ('mobile phone' in device):
+		content = openfileq3('phone')
+		# Need to add an android /apple section here
+	elif ('laptop' in device):
+		content = openfileq3('laptop')
+	elif ('tablet'):
+		print ('tablet troubleshooting detected')
 	else:
-		f = open('casenumbers.txt','r')
-		linelist = f.readlines()
-		f.close()
-		try:
-			f = open('casenumbers.txt','a')
-			newnum = int(linelist[-1])+1
-			f.write(str(newnum)+'\n')
+		print('Sorry, no help articles were found for your device')
+	
+	print ('First We will offer you some generic troubleshooting tips for your type of device')
+	scan_input()
+	print ('Do you need further assistance?')
+	ans = input().lower()
+	if ans == 'yes':
+		print (content)
+		print ('Did this solve your problem?')
+		ans = input().lower()
+		if ans == 'yes':
+			print('We are glad we could solve your problem!')
+		elif ans == 'no':
+			check_casedir()
+			case_number = new_casenumber()
+			f = open(case_number,'w+')
+			f.write(device+'\n')
+			f.write(manufacturer+'\n')
+			f.write(serialnum+'\n')
+			f.write(warranty+'\n')
 			f.close()
-			print ('Your case number is {} and has been recorded so your repair can be tracked'.format(newnum))
-		except Exception as e:
-			print ('There was a problem generating a new case number - now exiting')
+			print ('Please send your phone in for repair, your case number is {}'.format(case_number))
+		else:
+			print ('Invalid input, needs to be yes or no')
 			sys.exit()
 
+	elif ans == 'no':
+		print('We are glad we could solve your problem!')
 
-def is_emptyfile():
-	"""Checks to see if file exist and if it is empty """
-	try:
-		if os.stat('casenumbers.txt').st_size > 0:
-			return 0
-		else:
-			return 1
-	except OSError:
-		print ("File does not exist!")
-		print("Creating file...")
-		f = open('casenumbers.txt','w').close()
-		return 1
 
+
+
+def check_casedir():
+	"""Creates a casenumber directory if it does not already exist"""
+	if not os.path.exists('casenumbers'):
+		print ("Cases directory does not exist, this will be created now.")
+		os.makedirs('casenumbers')
 
 def gen_casenumber():
 	"""Generates a random number for the first case number"""
 	return str(randint(0,10000))
 
+def new_casenumber():
+	"""Creates new unique case number based on existing case numbers"""
+	dirs = os.listdir('casenumbers')
+	if dirs == []:
+		return gen_casenumber()
+	else:
+		sortedlist = sorted(dirs,key=int)
+		newcasenum = int(sortedlist[-1])+1
+		return newcasenum
 
 def openfile(problem):
 	"""Opens file and prints contents"""
@@ -130,6 +145,18 @@ def openfile(problem):
 	contents = f.read()
 	print (contents)
 	f.close()	
+
+
+def openfileq3(device):
+	if device == 'phone':
+		f = open('phoneq.txt','r')
+	elif device == 'laptop':
+		f = open('laptop.txt','r')
+	else:
+		print('random error')
+		sys.exit
+	lines = f.readlines()
+	return lines
 
 if __name__ == "__main__":
 	print ("Please enter a number for the task you wish to run. Valid numbers are 1,2,3")
@@ -139,6 +166,8 @@ if __name__ == "__main__":
 	elif q=='2':
 		scan_input()
 	elif q=='3':
-		write_casenumber()
+		#check_casedir()
+		#new_casenumber()
+		q3()
 	else:
 		print ('Error in input')
